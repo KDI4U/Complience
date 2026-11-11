@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.pytest_cache/
+.mypy_cache/
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment and Secrets (CRITICAL for Public Repos)
+.env
+*.env
+!.env.example
+!*.env.example
+ms_graph_config.json
+!ms_graph_config.example.json
+*token_cache*.json
+
+# Runtime Data, Reports, Captchas, Old data & Spreadsheets
+data/
+**/data/
+**/data/**
+old_data/
+**/old_data/
+**/old_data/**
+backup/
+**/backup/
+**/backup/**
+reports/
+**/reports/
+**/reports/**
+screenshots/
+**/screenshots/
+**/screenshots/**
+logs/
+**/logs/
+**/logs/**
+captcha/
+**/captcha/
+**/captcha/**
+captcha_images/
+**/captcha_images/
+**/captcha_images/**
+
+# Data files & Media
+*.xlsx
+*.xls
+*.csv
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

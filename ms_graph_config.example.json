@@ -1,0 +1,6 @@
+{
+  "client_id": "your_client_id_here",
+  "tenant_id": "your_tenant_id_here",
+  "client_secret": "your_client_secret_here",
+  "user_email": "your_email@example.com"
+}

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compliance Auto Suite - ESIC & EPFO Control Center</title>
+  <link rel="stylesheet" href="/static/style.css?v=20261015_3">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Top Header -->
+    <header>
+      <div class="brand-section">
+        <div class="brand-icon">⚡</div>
+        <div class="brand-titles">
+          <h1>COMPLIANCE AUTO SUITE</h1>
+          <p>ESIC & EPFO Enterprise Portal & HRMS Automation Hub</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="active-stage-pill" id="header-stage-pill">
+          <span class="stage-pulse-icon" id="header-stage-icon">⚡</span>
+          <span>STAGE: <strong id="header-stage-text">READY / IDLE</strong></span>
+        </div>
+        <div class="live-counter-pill" id="header-counter-pill">
+          <span class="live-glow-dot"></span>
+          <span>Live Downloaded: <strong id="header-live-downloaded-count">0</strong></span>
+        </div>
+        <div class="drive-badge">
+          <span>📁</span>
+          <span>Drive: D:\ (Active)</span>
+        </div>
+        <div class="port-pill" title="Dashboard running on Port 8008">
+          <span>PORT: <strong>8008</strong></span>
+        </div>
+        <div class="live-indicator">
+          <div class="pulse-dot" id="server-status-dot"></div>
+          <span id="server-status-text">Ready / Idle</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Service Selector Navigation -->
+    <nav class="service-nav">
+      <div class="service-selector">
+        <button id="tab-esic" class="tab-btn active esic-tab">
+          <span>🏢</span>
+          <span>ESIC Automation</span>
+          <span class="tab-badge">Active</span>
+        </button>
+        <button id="tab-epfo" class="tab-btn epfo-tab">
+          <span>🏦</span>
+          <span>EPFO Automation</span>
+        </button>
+      </div>
+      <div class="quick-actions">
+        <button id="btn-quick-send-email" class="btn-primary" style="padding: 9px 16px; font-size: 13px; background: linear-gradient(135deg, #0284c7, #2563eb);" title="Generate Fail/Not Downloaded Excel and Email via Outlook">
+          <span>📧</span>
+          <span>Email Failure Report</span>
+        </button>
+        <button id="btn-open-folder" class="btn-secondary" title="Open download directory on D: drive">
+          <span>📂</span>
+          <span>Open Downloads</span>
+        </button>
+        <button id="btn-open-excel" class="btn-secondary" title="Open users.xlsx file">
+          <span>📊</span>
+          <span>Open Excel</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Real-time Statistics Overview (5 Cards) -->
+    <section class="stats-grid">
+      <!-- Live Real-Time Download Counter Card -->
+      <div class="stat-card live-card">
+        <div class="stat-icon icon-live">⚡</div>
+        <div class="stat-info">
+          <div class="stat-value text-emerald">
+            <span id="stat-live-downloaded">0</span> <small style="font-size: 14px; font-weight: 500;">Downloaded</small>
+          </div>
+          <div class="stat-label">Live Session Counter</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-blue">👥</div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Accounts</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-green">✅</div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-success">0</div>
+          <div class="stat-label">Total Completed</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-amber">⚠️</div>
+        <div class="stat-info">
+          <div class="stat-value" id="stat-failed">0</div>
+          <div class="stat-label">Failed / Not Downloaded</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-purple">💾</div>
+        <div class="stat-info">
+          <div class="stat-value" style="font-size: 14px; font-weight: 600;" id="stat-drive">D:\Complience</div>
+          <div class="stat-label">Active Storage Path</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Outlook Failure Reporting Notice Banner -->
+    <div class="report-alert-banner">
+      <div class="report-banner-left">
+        <div class="report-banner-icon">📬</div>
+        <div>
+          <h4>MS Graph Outlook Failure Reporting Active</h4>
+          <p id="report-banner-recipients-desc">Fresh Excel of <strong>Failed & Not Downloaded</strong> accounts automatically generated and emailed to: <code id="banner-to-email">arun_mishra@uistech.in</code> (CC: <code id="banner-cc-emails">kundan_it@uistech.in, Shiv.mangal@uistech.in, Amresh_Sinha@uistech.in</code>)</p>
+        </div>
+      </div>
+      <div class="report-banner-actions">
+        <button id="btn-generate-report-only" class="btn-secondary" style="font-size: 12px; padding: 7px 14px;">
+          <span>📑</span>
+          <span>View Failure Excel</span>
+        </button>
+        <button id="btn-edit-recipients" class="btn-secondary" style="font-size: 12px; padding: 7px 14px;">
+          <span>⚙️</span>
+          <span>Recipients List</span>
+        </button>
+        <button id="btn-trigger-email" class="btn-add" style="font-size: 12px; padding: 7px 16px;">
+          <span>🚀</span>
+          <span>Send Mail Now</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bold Pipeline Live Stage Progress Tracker -->
+    <section class="stage-tracker-container" id="stage-tracker-container">
+      <div class="stage-tracker-header">
+        <div class="stage-tracker-title-box">
+          <span class="pulse-stage-ring"></span>
+          <span class="stage-tracker-prefix">PIPELINE EXECUTION STAGE:</span>
+          <strong id="stage-tracker-bold-text" class="stage-tracker-bold">READY / IDLE</strong>
+        </div>
+        <div class="stage-tracker-sub" id="stage-tracker-subtext">
+          <span>⚡ Click on any step badge below to run that step individually or resume from it!</span>
+        </div>
+      </div>
+      <div class="stage-steps-row">
+        <button type="button" class="step-badge clickable-step" id="step-badge-1" data-step="1" data-title="Step 1: Clean Old Data" title="Click to run Step 1 (Cleanup)">
+          <span class="step-circle">1</span>
+          <span class="step-title">Cleanup</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+        <div class="step-connector">➔</div>
+        <button type="button" class="step-badge clickable-step" id="step-badge-2" data-step="2" data-title="Step 2: Portal Download" title="Click to run Step 2 (Portal Download)">
+          <span class="step-circle">2</span>
+          <span class="step-title">Portal Download</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+        <div class="step-connector">➔</div>
+        <button type="button" class="step-badge clickable-step" id="step-badge-3" data-step="3" data-title="Step 3: Excel Merge" title="Click to run Step 3 (Excel Merge)">
+          <span class="step-circle">3</span>
+          <span class="step-title">Excel Merge</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+        <div class="step-connector">➔</div>
+        <button type="button" class="step-badge clickable-step" id="step-badge-4" data-step="4" data-title="Step 4: DB Download" title="Click to run Step 4 (DB Download)">
+          <span class="step-circle">4</span>
+          <span class="step-title">DB Download</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+        <div class="step-connector">➔</div>
+        <button type="button" class="step-badge clickable-step" id="step-badge-5" data-step="5" data-title="Step 5: Data Comparison" title="Click to run Step 5 (Comparison)">
+          <span class="step-circle">5</span>
+          <span class="step-title">Comparison</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+        <div class="step-connector">➔</div>
+        <button type="button" class="step-badge clickable-step" id="step-badge-6" data-step="6" data-title="Step 6: HRMS Master Upload" title="Click to run Step 6 (HRMS Upload)">
+          <span class="step-circle">6</span>
+          <span class="step-title">HRMS Upload</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+        <div class="step-connector">➔</div>
+        <button type="button" class="step-badge clickable-step mail-badge" id="step-badge-7" data-step="7" data-title="Step 7: Send Email Status Report" title="Click to run Step 7 (Send Mail)">
+          <span class="step-circle">7</span>
+          <span class="step-title">Send Mail</span>
+          <span class="step-action-tag">▶</span>
+        </button>
+      </div>
+
+      <!-- Direct Step-by-Step Manual Links Bar -->
+      <div class="step-manual-links-bar" id="step-manual-links-bar">
+        <div class="manual-links-label">
+          <span>🔗 Manual Step Links:</span>
+        </div>
+        <div class="manual-links-list">
+          <a href="https://portal.esic.gov.in/ESICInsurance1/RevenueOne/MonthlyContribution/EmployerLogin.aspx" target="_blank" class="step-manual-link-chip" id="chip-portal-url" title="Open Official Portal in Browser for Manual Work">
+            <span>🌐 Step 2: Portal Login</span>
+          </a>
+          <button type="button" class="step-manual-link-chip" onclick="openStepTargetFile(3)" title="Open Step 3 Consolidated Merged Excel">
+            <span>📊 Step 3: Merged Excel</span>
+          </button>
+          <button type="button" class="step-manual-link-chip" onclick="openStepTargetFile(4)" title="Open Step 4 Database Export File">
+            <span>🗄️ Step 4: DB Data</span>
+          </button>
+          <button type="button" class="step-manual-link-chip" onclick="openStepTargetFile(5)" title="Open Step 5 Comparison Output Report">
+            <span>⚖️ Step 5: Comparison File</span>
+          </button>
+          <a href="https://hrms.uistech.in/master/epfo-esic-master" target="_blank" class="step-manual-link-chip highlight-chip" id="chip-hrms-url" title="Open HRMS Portal to Manually Upload Master CSV">
+            <span>🚀 Step 6: HRMS Master Portal</span>
+          </a>
+          <button type="button" class="step-manual-link-chip" onclick="openStepTargetFile(6)" title="Open HRMS_Upload.csv File">
+            <span>📄 Step 6: HRMS Upload CSV</span>
+          </button>
+          <button type="button" class="step-manual-link-chip" onclick="openStepTargetFile(7)" title="Open Generated Email Reports Folder">
+            <span>📁 Step 7: Email Reports</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Execution Panels Grid -->
+    <main class="main-grid">
+      
+      <!-- Panel 1: Single Account Quick Execution -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>🎯</span>
+            <span>Single Code / Account Run</span>
+          </div>
+          <span class="tab-badge" style="background: rgba(59, 130, 246, 0.15); color: #60a5fa;">Direct Run</span>
+        </div>
+        <p class="panel-desc">Select any registered account or enter a Code. Automatically executes the complete pipeline: Step 1 Clean &bull; Step 2 Download &bull; Step 3 Merge &bull; Step 4 DB &bull; Step 5 Compare &bull; Step 6 HRMS &bull; Step 7 Report.</p>
+
+        <div class="form-group">
+          <label class="form-label" for="single-code-select">Select Account from List (Quick Pick)</label>
+          <select id="single-code-select" class="select-field">
+            <option value="">-- Choose Account from Excel --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="single-userid">Employer Code / User ID</label>
+          <div class="input-wrapper">
+            <input type="text" id="single-userid" class="input-field" placeholder="e.g. 15421569550011001 or BRPAT1622287000" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="single-password">Account Password</label>
+          <div class="input-wrapper">
+            <input type="password" id="single-password" class="input-field" placeholder="Auto-loaded from Excel (or enter new)" autocomplete="off">
+            <button type="button" id="toggle-single-pwd" class="input-field-btn" title="Show/Hide Password">👁</button>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="single-headless">
+          <label for="single-headless">Run in Headless Mode (Hidden browser background run)</label>
+        </div>
+
+        <div style="margin-top: auto; padding-top: 10px;">
+          <button id="btn-run-single" class="btn-primary esic-btn">
+            <span>⚡</span>
+            <span>Run Pipeline for This Code (Steps 1 to 7)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Panel 2: Full Automation Pipeline Controller -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span>⚙️</span>
+            <span>Pipeline Batch Automation</span>
+          </div>
+          <span class="tab-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Batch Pipeline</span>
+        </div>
+        <p class="panel-desc">Execute the end-to-end multi-step automated compliance pipeline for all accounts registered in the Excel spreadsheet.</p>
+
+        <div class="form-group">
+          <label class="form-label" for="pipeline-step">Pipeline Execution Stage</label>
+          <select id="pipeline-step" class="select-field">
+            <option value="">Run Full Pipeline (All 7 Steps)</option>
+            <option value="1">Step 1: Clean Old ESIC Data</option>
+            <option value="2">Step 2: ESIC Portal Download</option>
+            <option value="3">Step 3: Merge & Column Rename</option>
+            <option value="4">Step 4: PostgreSQL DB Download</option>
+            <option value="5">Step 5: Data Comparison</option>
+            <option value="6">Step 6: HRMS ESIC Master Upload</option>
+            <option value="7">Step 7: Send Email Status Report</option>
+          </select>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="pipeline-headless">
+          <label for="pipeline-headless">Headless Browser (Run without visible Playwright window)</label>
+        </div>
+
+        <div style="margin-top: auto; padding-top: 10px; display: flex; gap: 12px;">
+          <button id="btn-run-pipeline" class="btn-primary esic-btn" style="flex: 1;">
+            <span>🚀</span>
+            <span>Start Automation Pipeline</span>
+          </button>
+          <button id="btn-stop-pipeline" class="btn-danger" style="display: none;">
+            <span>⏹</span>
+            <span>Stop Process</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Credentials Table Section -->
+    <section class="accounts-section">
+      <div class="accounts-header">
+        <div class="accounts-header-left">
+          <h2 style="font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 600;" id="service-title-text">
+            ESIC Compliance Operations
+          </h2>
+          <span class="tab-badge" style="background: rgba(255, 255, 255, 0.08); color: var(--text-muted);">
+            Excel Database (D: Drive)
+          </span>
+        </div>
+        <div class="accounts-header-actions">
+          <div class="input-wrapper search-box">
+            <input type="text" id="account-search" class="input-field" placeholder="🔍 Search code or status..." style="padding: 9px 14px; font-size: 13px;">
+          </div>
+          <button id="btn-add-account" class="btn-add">
+            <span>➕</span>
+            <span>Add New Account</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Batch Actions Toolbar for 1 or 2 Codes or Failed Codes -->
+      <div class="accounts-batch-toolbar" id="accounts-batch-toolbar">
+        <div class="batch-toolbar-left">
+          <button id="btn-retry-failed-codes" class="btn-batch btn-amber-glow" title="Retry downloading for all failed/error codes">
+            <span>🔄</span>
+            <span>Retry Failed Codes (<strong id="failed-codes-count">0</strong>)</span>
+          </button>
+          <button id="btn-run-selected-codes" class="btn-batch btn-cyan-glow" style="display: none;" title="Process selected accounts directly">
+            <span>⚡</span>
+            <span>Run Selected (<strong id="selected-codes-count">0</strong>)</span>
+          </button>
+          <button id="btn-clear-selection" class="btn-batch-ghost" style="display: none;" title="Clear checked codes">
+            <span>✕ Clear Selection</span>
+          </button>
+        </div>
+        <div class="batch-toolbar-right">
+          <span style="font-size: 12px; color: var(--text-muted);">💡 Tip: Check 1 or 2 codes to process them directly</span>
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 38px; text-align: center;"><input type="checkbox" id="select-all-accounts" title="Select All"></th>
+              <th style="width: 50px;">#</th>
+              <th>User ID / Employer Code</th>
+              <th>Password</th>
+              <th>Status / Last Portal Response</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="accounts-tbody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                Loading accounts from Excel...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Live Execution Terminal -->
+    <section class="terminal-section">
+      <div class="terminal-header">
+        <div class="terminal-title">
+          <div class="terminal-dots">
+            <div class="terminal-dot dot-red"></div>
+            <div class="terminal-dot dot-yellow"></div>
+            <div class="terminal-dot dot-green"></div>
+          </div>
+          <span>Execution Log Terminal (Live Output & Download Tracker)</span>
+        </div>
+        <div class="terminal-actions">
+          <button id="btn-autoscroll" class="btn-terminal">Auto-scroll: ON</button>
+          <button id="btn-copy-logs" class="btn-terminal">Copy Logs</button>
+          <button id="btn-clear-logs" class="btn-terminal">Clear Terminal</button>
+        </div>
+      </div>
+      <div class="terminal-body" id="terminal-output">
+        <div class="terminal-line system">[SYSTEM] Compliance Suite Dashboard ready. All file download & Excel paths mapped to D:\Complience.</div>
+        <div class="terminal-line system">[SYSTEM] Live Download Tracker active. MS Graph Outlook mailer ready (arun_mishra@uistech.in).</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Add / Edit Account Modal -->
+  <div class="modal-overlay" id="modal-account">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-title">Add New Account</h3>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="modal-userid">User ID / Employer Code</label>
+        <input type="text" id="modal-userid" class="input-field" placeholder="Enter User ID or Code" autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="modal-password">Password</label>
+        <input type="text" id="modal-password" class="input-field" placeholder="Enter account password" autocomplete="off">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modal-cancel-btn" style="flex: 1;">Cancel</button>
+        <button class="btn-primary" id="btn-save-account" style="flex: 1;">Save to Excel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Recipients Modal -->
+  <div class="modal-overlay" id="modal-recipients">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Outlook Email Recipients Config</h3>
+        <button class="modal-close" id="modal-recipients-close-btn">&times;</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Configured in <code>email_recipients.xlsx</code>. Failure reports will be attached and sent to these addresses:
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="recipients-to">Primary Recipient (TO)</label>
+        <input type="text" id="recipients-to" class="input-field" placeholder="e.g. arun_mishra@uistech.in">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="recipients-cc">CC Recipients (comma separated)</label>
+        <input type="text" id="recipients-cc" class="input-field" placeholder="e.g. kundan_it@uistech.in, Shiv.mangal@uistech.in, Amresh_Sinha@uistech.in">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modal-recipients-open-excel" style="flex: 1;">Open Excel</button>
+        <button class="btn-primary" id="btn-save-recipients" style="flex: 1;">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step Execution & Retry Modal -->
+  <div class="modal-overlay" id="modal-step-runner">
+    <div class="modal-card modal-step-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="step-circle" id="modal-step-num" style="width: 28px; height: 28px; font-size: 13px;">1</span>
+          <h3 id="modal-step-heading" style="margin: 0; font-size: 16px;">Step Execution & Retry</h3>
+        </div>
+        <button class="modal-close" id="modal-step-close-btn">&times;</button>
+      </div>
+
+      <p id="modal-step-desc" style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Choose how you want to run or resume this step.
+      </p>
+
+      <div class="step-mode-selector">
+        <label class="step-mode-option">
+          <input type="radio" name="step-execution-mode" value="single_step" checked>
+          <div class="step-mode-content">
+            <div class="step-mode-title">Run Only This Step</div>
+            <div class="step-mode-sub" id="modal-step-single-sub">Execute this step only, then stop.</div>
+          </div>
+        </label>
+        <label class="step-mode-option">
+          <input type="radio" name="step-execution-mode" value="from_step">
+          <div class="step-mode-content">
+            <div class="step-mode-title">Resume Pipeline From Here</div>
+            <div class="step-mode-sub" id="modal-step-from-sub">Execute from this step through Step 7 sequentially.</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="form-group" id="modal-step-codes-group" style="margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <label class="form-label" for="modal-step-codes" style="margin: 0;">Target Codes (Optional):</label>
+          <button type="button" id="modal-step-use-selected" class="btn-text-action" style="font-size: 11px; color: var(--cyan); background: none; border: none; cursor: pointer; text-decoration: underline;">Use Checked Codes</button>
+        </div>
+        <input type="text" id="modal-step-codes" class="input-field" placeholder="Leave empty for all, or e.g. 33421569550011001, 15421569550011001" autocomplete="off">
+        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 4px;">Applies to Step 2 (Portal Download) to download only specific codes.</span>
+      </div>
+
+      <div class="checkbox-group" style="margin-top: 12px; margin-bottom: 14px;">
+        <input type="checkbox" id="modal-step-headless">
+        <label for="modal-step-headless">Run in Headless Mode (Hidden browser background run)</label>
+      </div>
+
+      <!-- Direct Manual Link & File Box -->
+      <div class="manual-step-box" id="modal-step-manual-box" style="margin-bottom: 16px; padding: 12px; background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+          <strong style="color: #60a5fa; font-size: 13px;">🌐 Manual Work & Direct Links:</strong>
+          <span style="font-size: 11px; color: var(--text-muted);">Work on this step manually</span>
+        </div>
+        <p id="modal-step-manual-desc" style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
+          Open official portal in browser or open output file in Excel to do work manually.
+        </p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="#" target="_blank" id="modal-step-portal-link" class="btn-batch btn-cyan-glow" style="text-decoration: none; font-size: 11px;">
+            <span>🌐</span> <span id="modal-step-portal-btn-text">Open Portal in Browser</span>
+          </a>
+          <button type="button" id="modal-step-file-btn" class="btn-batch btn-batch-ghost" style="font-size: 11px;">
+            <span>📂</span> <span id="modal-step-file-btn-text">Open Step File / Folder</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" id="modal-step-cancel-btn" style="flex: 1;">Cancel</button>
+        <button class="btn-primary" id="modal-step-run-btn" style="flex: 1;">
+          <span>▶</span>
+          <span id="modal-step-btn-text">Execute Step</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/app.js?v=20261015_3"></script>
+</body>
+</html>

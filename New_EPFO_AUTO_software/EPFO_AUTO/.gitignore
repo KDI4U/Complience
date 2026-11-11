@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+logs/
+screenshots/
+data/db/*.xlsx
+data/esic/downloads/*
+data/esic/ESIC_Merged.xlsx
+data/result/*

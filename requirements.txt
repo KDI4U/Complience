@@ -1,0 +1,27 @@
+# ============================================================
+# COMPLIANCE AUTOMATION SUITE - REQUIREMENTS
+# ESIC & EPFO Automation, Dashboard & MS Graph Outlook Mail
+# ============================================================
+
+# Web Dashboard & API Server
+fastapi>=0.110.0
+uvicorn>=0.28.0
+pydantic>=2.6.0
+
+# Browser Automation & AI
+playwright>=1.42.0
+ollama>=0.1.7
+
+# Excel & Data Processing
+openpyxl>=3.1.2
+pandas>=2.2.0
+
+# Database Connectivity (PostgreSQL)
+psycopg2-binary>=2.9.9
+
+# Microsoft Graph Outlook Integration
+msal>=1.28.0
+requests>=2.31.0
+
+# Environment & Configuration
+python-dotenv>=1.0.1
